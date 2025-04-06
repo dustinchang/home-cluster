@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+helmCharts:
+  - name: flux-instance
+    repo: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
+    version: 0.18.0
+    releaseName: flux-instance
+    namespace: flux-system
+    valuesFile: ../../kubernetes/apps/flux-system/flux-instance/app/resources/values.yaml
+commonAnnotations:
+  meta.helm.sh/release-name: flux-instance
+  meta.helm.sh/release-namespace: flux-system
+commonLabels:
+  app.kubernetes.io/managed-by: Helm
