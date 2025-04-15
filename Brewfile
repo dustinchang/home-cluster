@@ -1,0 +1,23 @@
+brew "age"
+brew "helm"
+brew "k9s"
+brew "kubernetes-cli"
+brew "sops"
+brew "talhelper"
+brew "talosctl"
+brew "go-task/tap/go-task"
+
+# Personal
+# brew "cocoapods" # Maybe
+# cask "alt-tab"
+# brew "git"
+# cask "google-chrome"
+# cask "google-chrome@canary"
+# cask "iterm2"
+# brew "nvm"
+# cask "proton-pass"
+# cask "rectangle"
+# cask "spotify"
+# cask "signal"
+# cask "visual-studio-code"
+# cask "whatsapp"
