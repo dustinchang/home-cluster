@@ -1,3 +1,4 @@
 ---
 providerRegex: ^(k8s-\d+)$
 bypassDnsResolution: true
+replicas: 1 # Testing to fix shitty error
