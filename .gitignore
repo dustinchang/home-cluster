@@ -5,6 +5,8 @@ Thumbs.db
 kubeconfig
 talosconfig
 talos/clusterconfig/
+talos/cni/charts/
+talos/kubelet-csr-approver/charts/
 # task
 .task/
 # vscode-sops

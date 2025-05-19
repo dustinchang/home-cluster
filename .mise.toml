@@ -1,0 +1,10 @@
+[env]
+# File paths
+MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
+# Directory paths
+ROOT_DIR = "{{config_root}}"
+BOOTSTRAP_DIR = "{{config_root}}/bootstrap"
+KUBERNETES_DIR = "{{config_root}}/kubernetes"
+TALOS_DIR = "{{config_root}}/talos"
+TALOSCONFIG = "{{config_root}}/talos/clusterconfig/talosconfig"
+ONEPASSWORD_VAULT = "kubernetes"

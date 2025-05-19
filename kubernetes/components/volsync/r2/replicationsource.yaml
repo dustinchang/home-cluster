@@ -1,0 +1,37 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationsource_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: ${APP}
+spec:
+  sourcePVC: ${VOLSYNC_CLAIM:-${APP}}
+  trigger:
+    schedule: ${VOLSYNC_SCHEDULE:-0 11 * * *}
+  restic:
+    accessModes: ["${VOLSYNC_SNAP_ACCESSMODES:=ReadWriteOnce}"]
+    cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:=ReadWriteOnce}"]
+    cacheCapacity: ${VOLSYNC_CACHE_CAPACITY:=2Gi}
+    cacheStorageClassName: ${VOLSYNC_CACHE_SNAPSHOTCLASS:=openebs-hostpath}
+    copyMethod: ${VOLSYNC_COPYMETHOD:=Snapshot}
+    moverSecurityContext:
+      fsGroup: ${APP_GID:-1000}
+      runAsGroup: ${APP_GID:-1000}
+      runAsUser: ${APP_UID:-1000}
+    pruneIntervalDays: 14
+    repository: ${APP}-volsync-secret
+    retain:
+      daily: 7
+    storageClassName: ${VOLSYNC_STORAGECLASS:=ceph-block}
+    volumeSnapshotClassName: ${VOLSYNC_SNAPSHOTCLASS:=csi-ceph-blockpool}
+    moverAffinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/created-by: volsync
+            namespaceSelector:
+              matchExpressions:
+                - key: kubernetes.io/metadata.name
+                  operator: Exists

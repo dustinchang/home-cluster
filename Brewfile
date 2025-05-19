@@ -1,11 +1,20 @@
 brew "age"
 brew "helm"
 brew "k9s"
+tap "fluxcd/tap"
+brew "fluxcd/tap/flux"
+brew "jq"
+brew "yq"
+brew "kubecolor"
 brew "kubernetes-cli"
+brew "mise"
 brew "sops"
 brew "talhelper"
 brew "talosctl"
 brew "go-task/tap/go-task"
+cask "1password"
+cask "1password-cli"
+brew "minijinja-cli"
 
 # Personal
 # brew "cocoapods" # Maybe

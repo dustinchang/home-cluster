@@ -3,12 +3,17 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: OCIRepository
 metadata:
-  name: flux-instance
+  name: spegel
 spec:
-  interval: 1h
+  interval: 5m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: 0.20.0
-  url: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
+    tag: 0.2.0
+  url: oci://ghcr.io/spegel-org/helm-charts/spegel
+  verify:
+    provider: cosign
+    matchOIDCIdentity:
+      - issuer: ^https://token.actions.githubusercontent.com$
+        subject: ^https://github.com/spegel-org/spegel.*$

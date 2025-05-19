@@ -1,0 +1,119 @@
+---
+helmDefaults:
+  force: true
+  timeout: 600
+  wait: true
+  waitForJobs: true
+
+repositories:
+  - name: cilium
+    url: https://helm.cilium.io
+  - name: coredns
+    url: https://coredns.github.io/helm
+  - name: postfinance
+    url: https://postfinance.github.io/kubelet-csr-approver
+  - name: jetstack
+    url: https://charts.jetstack.io
+
+releases:
+  - chart: cilium/cilium
+    hooks:
+      - args:
+          - '--field-manager=kustomize-controller'
+          - '--kustomize'
+          - '--namespace=kube-system'
+          - '--server-side'
+          - ../kubernetes/apps/kube-system/cilium/config
+          - apply
+        command: kubectl
+        events: ["postsync"]
+    name: cilium
+    namespace: kube-system
+    values:
+      - ../kubernetes/apps/kube-system/cilium/app/resources/values.yaml
+    version: 1.17.2
+
+  - chart: coredns/coredns
+    name: coredns
+    namespace: kube-system
+    needs:
+      - kube-system/cilium
+    values:
+      - ../kubernetes/apps/kube-system/coredns/app/resources/values.yaml
+    version: 1.39.2
+
+  # - chart: jetstack/cert-manager
+  #   name: cert-manager
+  #   namespace: cert-manager
+  #   needs:
+  #     - kube-system/coredns
+  #   values:
+  #     - ../kubernetes/apps/cert-manager/cert-manager/app/resources/values.yaml
+  #   version: v1.17.1
+
+  - chart: oci://ghcr.io/external-secrets/charts/external-secrets
+    name: external-secrets
+    namespace: external-secrets
+    needs:
+      - kube-system/coredns
+    # TODO: change back once cert-manager is available
+    # needs:
+    #   - cert-manager/cert-manager
+    values:
+      - ../kubernetes/apps/external-secrets/external-secrets/app/resources/values.yaml
+    version: 0.15.1
+    hooks:
+      - # Wait for external-secrets CRDs to be available
+        events: ['postsync']
+        command: bash
+        args:
+          - -c
+          - until kubectl get crd clustersecretstores.external-secrets.io &>/dev/null; do sleep 10; done
+        showlogs: true
+      - # Apply cluster secret store configuration
+        events: ['postsync']
+        command: kubectl
+        args:
+          - apply
+          - --namespace=external-secrets
+          - --server-side
+          - --field-manager=kustomize-controller
+          - --filename=../kubernetes/apps/external-secrets/external-secrets/onepassword/store/clustersecretstore.yaml
+        showlogs: true
+
+  - chart: postfinance/kubelet-csr-approver
+    name: kubelet-csr-approver
+    namespace: kube-system
+    needs:
+      - external-secrets/external-secrets
+    values:
+      - ../kubernetes/apps/kube-system/kubelet-csr-approver/app/resources/values.yaml
+    version: 1.2.6
+
+  - chart: oci://ghcr.io/spegel-org/helm-charts/spegel
+    name: spegel
+    namespace: kube-system
+    needs:
+      - external-secrets/external-secrets
+    values:
+      - ../kubernetes/apps/kube-system/spegel/app/resources/values.yaml
+    version: 0.1.1
+
+  - chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
+    name: flux-operator
+    namespace: flux-system
+    needs:
+      - kube-system/spegel
+    values:
+      - ../kubernetes/apps/flux-system/flux-operator/app/resources/values.yaml
+    version: 0.18.0
+
+  - chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
+    name: flux-instance
+    namespace: flux-system
+    needs:
+      - flux-system/flux-operator
+    values:
+      - ../kubernetes/apps/flux-system/flux-instance/app/resources/values.yaml
+    version: 0.18.0
+    wait: false
