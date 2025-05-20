@@ -20,17 +20,17 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    # - name: https
-    #   protocol: HTTPS
-    #   port: 443
-    #   hostname: "*.dustinchang.dev"
-    #   allowedRoutes:
-    #     namespaces:
-    #       from: All
-    #   tls:
-    #     certificateRefs:
-    #       - kind: Secret
-    #         name: dustinchang-dev-tls
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.dustinchang.dev"
+      allowedRoutes:
+        namespaces:
+          from: All
+      # tls:
+      #   certificateRefs:
+      #     - kind: Secret
+      #       name: dustinchang-dev-tls
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumLoadBalancerIPPool
