@@ -9,4 +9,5 @@ configurations:
   - kustomizeconfig.yaml
 resources:
   - ./helmrelease.yaml
-  # - ./httproute.yaml
+  - ./httproute.yaml
+  - ./config.yaml

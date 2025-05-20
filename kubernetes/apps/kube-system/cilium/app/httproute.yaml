@@ -5,11 +5,12 @@ kind: HTTPRoute
 metadata:
   name: hubble-dashboard
 spec:
-  hostnames: ["hubble.chestr.dev"]
+  hostnames: ["hubble.dustinchang.dev"]
   parentRefs:
     - name: internal
       namespace: networking
-      sectionName: https
+      # sectionName: https
+      sectionName: http
   rules:
     - backendRefs:
         - name: hubble-ui
