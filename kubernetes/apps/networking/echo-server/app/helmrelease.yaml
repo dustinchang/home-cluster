@@ -81,7 +81,8 @@ spec:
           # - name: external
           - name: internal
             namespace: networking
-            sectionName: https
+            # sectionName: https
+            sectionName: http
         rules:
           - backendRefs:
               - name: *app

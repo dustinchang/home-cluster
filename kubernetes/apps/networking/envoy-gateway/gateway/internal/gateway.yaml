@@ -23,7 +23,8 @@ spec:
       hostname: "*.dustinchang.dev"
       allowedRoutes:
         namespaces:
-          from: Same
+          # from: Same
+          from: All
     # - name: https
     #   protocol: HTTPS
     #   port: 443
