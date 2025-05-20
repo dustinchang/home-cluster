@@ -79,7 +79,7 @@ spec:
         #   gethomepage.dev/name: Echo
         parentRefs:
           # - name: external
-          - name: internal
+          - name: internal2
             namespace: networking
             # sectionName: https
             sectionName: http
